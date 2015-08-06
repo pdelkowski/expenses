@@ -15,7 +15,7 @@ class ExpenseItem(models.Model):
     category = models.ForeignKey(ExpenseCategory, blank=True, null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, default='No description')
-    cost = models.IntegerField(default=0)
+    cost = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
