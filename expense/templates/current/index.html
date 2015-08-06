@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-lg-12">
+    <h1>This month expenses</h1>
+    <a href="{% url 'expense_new' %}" class="btn btn-lg btn-success" style="margin-bottom: 10px;">Add new expense</a>
+    <table class="table table-striped">
+    <tr>
+        <th>Category</th>
+        <th>Expense name</th>
+        <th>Description</th>
+        <th>Created at</th>
+    </tr>
+    {% for expense in latest_expense_list %}
+        <tr>
+          <td>{{ expense.category.name }}</td>
+          <td>{{ expense.name }}</td>
+          <td>{{ expense.description|truncatewords:"15" }}</td>
+          <td>{{ expense.created_at }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
+
