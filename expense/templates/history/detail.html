@@ -2,27 +2,26 @@
 
 {% block content %}
 <div class="col-lg-12">
-    <h1>This month expenses</h1>
-    <a href="{% url 'expense_new' %}" class="btn btn-lg btn-success" style="margin-bottom: 10px;">Add new expense</a>
+    <h1>Expenses details</h1>
+    <h3>You spent: {{ expenses.info.total_cost }} zł in {{ expenses.info.transactions }} transactions</h3>
     <table class="table table-striped">
     <tr>
         <th>Created at</th>
         <th>Category</th>
         <th>Expense name</th>
         <th>Cost</th>
-        <th>Description</th>
+        <th>Actions</th>
     </tr>
-    {% for expense in latest_expense_list %}
+    {% for expense in expenses.objects %}
         <tr>
           <td>{{ expense.created_at }}</td>
           <td>{{ expense.category.name }}</td>
           <td>{{ expense.name }}</td>
           <td>{{ expense.cost }} zł</td>
-          <td>{{ expense.description|truncatewords:"10" }}</td>
+          <td><a href="#" class="btn btn-sm btn-warning">Show description</a></td>
         </tr>
     {% endfor %}
     </table>
 </div>
 
 {% endblock %}
-

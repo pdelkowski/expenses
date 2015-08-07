@@ -7,5 +7,10 @@ admin.site.unregister(User)
 admin.site.unregister(Group)
 
 # Register expense items and categories
-admin.site.register(ExpenseItem)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at', 'cost', 'category')
+    list_filter = ('created_at', 'category')
+    search_fields = ('name',)
+
+admin.site.register(ExpenseItem, ItemAdmin)
 admin.site.register(ExpenseCategory)
