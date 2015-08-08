@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from datetime import datetime
+
 def created_at_current_time():
     return timezone.now()
 
@@ -20,7 +22,7 @@ class ExpenseItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, default='No description')
     cost = models.FloatField(default=0)
-    created_at = models.DateTimeField(default=created_at_current_time())
+    created_at = models.DateTimeField(default=datetime.now)
 
     def __unicode__(self):
         return self.name
