@@ -14,8 +14,11 @@ def get_current_month():
 def get_recent_expenses():
     current_datetime = timezone.now()
     current_month = datetime.datetime(current_datetime.year, current_datetime.month, 1)
+
     queryset = ExpenseItem.objects.filter(created_at__gt = current_month).order_by('-created_at')
-    return queryset
+    aggregated_data = queryset.aggregate(total_cost=Sum('cost'), transactions=Count('id'))
+
+    return { 'objects': queryset, 'info': aggregated_data }
 
 def get_month_history():
     queryset = ExpenseItem.objects.filter(created_at__lt = get_current_month()).extra(select={'month': connections[ExpenseItem.objects.db].ops.date_trunc_sql('month', 'created_at')}).values('month').annotate(count=Count('created_at'), total_cost=Sum('cost'))

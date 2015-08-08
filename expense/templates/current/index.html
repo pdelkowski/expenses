@@ -3,6 +3,7 @@
 {% block content %}
 <div class="col-lg-12">
     <h1>This month expenses</h1>
+    <h3>You spent this month <span style="color: red">{{ latest_expenses.info.total_cost }}</span> zł in <span style="color: red">{{ latest_expenses.info.transactions }}</span> transactions, so far</h3>
     <a href="{% url 'expense_new' %}" class="btn btn-lg btn-success" style="margin-bottom: 10px;">Add new expense</a>
     <table class="table table-striped">
     <tr>
@@ -12,7 +13,7 @@
         <th>Cost</th>
         <th>Description</th>
     </tr>
-    {% for expense in latest_expense_list %}
+    {% for expense in latest_expenses.objects %}
         <tr>
           <td>{{ expense.created_at }}</td>
           <td>{{ expense.category.name }}</td>

@@ -11,7 +11,7 @@ from .forms import ExpenseForm
 
 class CurrentView(generic.ListView):
     template_name = 'current/index.html'
-    context_object_name = 'latest_expense_list'
+    context_object_name = 'latest_expenses'
 
     def get_queryset(self):
         return get_recent_expenses()
@@ -48,8 +48,6 @@ class HistoryDetailView(generic.ListView):
         if result == False:
             raise Http404("Couldn't fetch any data with provided date")
 
-        print 'aaaaaaaaaaaaaaaa'
-        print result
         return result
 
 def test(request):
