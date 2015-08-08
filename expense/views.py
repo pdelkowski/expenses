@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.views import generic
@@ -51,6 +52,8 @@ class HistoryDetailView(generic.ListView):
         return result
 
 def test(request):
-    get_month_detailed_history()
-
+    month_date = get_current_month()
+    report_date = str(month_date.year)+'-'+str(month_date.month)+'-01'
+    r = prepare_report_data(report_date)
+    #return render_to_response('mailer/expense_report.html', {'expenses': r}, context_instance=RequestContext(request))
     return HttpResponse('testing...')

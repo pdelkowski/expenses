@@ -1,0 +1,107 @@
+<html>
+<head>
+    <title>Month report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+    th, td { padding: 5px; }
+    th { background-color: #bbb; }
+
+    .even { background-color: #fff; }
+    .odd { background-color: #ddd; }
+    .section-tr { text-align: left; background-color: #ccc; font-weight: bold; }
+    </style>
+</head>
+
+<body style="font-family: sans-serif">
+
+<h1>Month report: {{ expenses.summary_total.date }}</h1>
+<h3>Your sent: <span style="color: red">{{ expenses.summary_total.total_cost }}</span> PLN in {{ expenses.summary_total.transactions }} transactions</h3>
+
+<hr>
+
+<h3>Your expenses</h3>
+<table style="border: 1px solid black; width: 100%">
+    <tr style="text-align: center; background-color: #bbb;">
+        <th>Date</th> 
+        <th>Category</th> 
+        <th>Name</th> 
+        <th>Cost</th> 
+    </tr>
+
+    {% if expenses.all_expenses %}
+        {% for expense in expenses.all_expenses %}
+            <tr class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+                <td>{{ expense.created_at }}</td>
+                <td>{{ expense.category }}</td>
+                <td>{{ expense.name }}</td>
+                <td>{{ expense.cost }} PLN</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+</table>
+
+<br>
+<hr>
+
+<h3>Your expenses by day</h3>
+
+<table style="border: 1px solid black; width: 100%">
+    <tr style="text-align: center; background-color: #ccc;">
+        <th>Category</th> 
+        <th>Name</th> 
+        <th>Cost</th> 
+    </tr>
+
+    {% for summary in expenses.summary_by_date %}
+        <tr class='section-tr'>
+            <td colspan=3>{{ summary.weekday }}, {{ summary.total_cost }} PLN, {{ summary.id__count }} transactions</td>
+        </tr>
+
+        {% if summary.objects %}
+            {% for expense in summary.objects %}
+                <tr class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.cost }} PLN</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+
+    {% endfor %}
+
+</table>
+
+<br>
+<hr>
+
+<h3>Your expenses by category</h3>
+
+<table style="border: 1px solid black; width: 100%">
+    <tr style="text-align: center; background-color: #ccc;">
+        <th>Date</th> 
+        <th>Name</th> 
+        <th>Cost</th> 
+    </tr>
+
+    {% for category, expenses in expenses.grouped_by_category.items %}
+        <tr class='section-tr'>
+            <td colspan=3>{{ category }}</td>
+        </tr>
+
+        {% if expenses %}
+            {% for expense in expenses %}
+                <tr class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+                    <td>{{ expense.created_at }}</td>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.cost }} PLN</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
