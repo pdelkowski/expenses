@@ -1,7 +1,7 @@
 # Track your expenses
 This is really simple application to help you track your expenses, monthy.
 
-### Instalation
+### Installation
 Simply git repo and 
 ```
 python manage.py migrate
