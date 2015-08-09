@@ -107,7 +107,7 @@ def prepare_report_data(month_date):
 
 def send_report(month_date):
     """ This is typically used by cron/at so every 'print' goes straight to the log files """
-    report_date = str(month_date.year)+'-'+str(month_date.month)+'-01'
+    report_date = str(month_date.year)+'-'+str('%02d' % month_date.month)+'-01'
     report_data = prepare_report_data(report_date)
 
     template = get_template('mailer/expense_report.html')
@@ -117,6 +117,7 @@ def send_report(month_date):
         print "Unexpected error while rendering template:", e
 
     mailer = MailerManager()
+    mailer.set_subject('Expense report: '+report_date[:7])
     mailer.set_body(html)
     mailer.send()
 
