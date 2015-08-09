@@ -100,7 +100,7 @@ def prepare_report_data(month_date):
 
     """ Total summary """
     summary_total = queryset.order_by('created_at').aggregate(total_cost=Sum('cost'), transactions=Count('id'))
-    summary_total['date'] = get_current_month().strftime('%Y-%m-%d')
+    summary_total['date'] = month_begin.strftime('%Y-%m')
 
     return { 'all_expenses': all_expenses, 'grouped_by_category': grouped_by_category, 'grouped_by_date': grouped_by_date, 'summary_by_date': summary_by_date, 'summary_total': summary_total }
 
