@@ -42,8 +42,6 @@ INSTALLED_APPS = (
     'bootstrap3',
     'expense',
     'django_cron',
-
-    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,8 +53,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'expenses.urls'
@@ -108,8 +104,11 @@ DEFAULT_CHARSET = 'utf-8'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_cdn')
 
 CRON_CLASSES = [
     "expense.jobs.ExpenseReportJob",
@@ -128,4 +127,3 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 REPORT_FROM_EMAIL = os.environ.get("REPORT_FROM_EMAIL")
 REPORT_TO_EMAIL = os.environ.get("REPORT_TO_EMAIL")
 REPORT_DAY_OF_MONTH = 1
-

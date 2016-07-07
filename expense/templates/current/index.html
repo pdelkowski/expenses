@@ -1,29 +1,237 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block content %}
-<div class="col-lg-12">
-    <h1>This month expenses</h1>
-    <h3>You spent this month <span style="color: red">{{ latest_expenses.info.total_cost }}</span> zł in <span style="color: red">{{ latest_expenses.info.transactions }}</span> transactions, so far</h3>
-    <a href="{% url 'expense_new' %}" class="btn btn-lg btn-success" style="margin-bottom: 10px;">Add new expense</a>
-    <table class="table table-striped">
-    <tr>
-        <th>Created at</th>
-        <th>Category</th>
-        <th>Expense name</th>
-        <th>Cost</th>
-        <th>Description</th>
-    </tr>
-    {% for expense in latest_expenses.objects %}
-        <tr>
-          <td>{{ expense.created_at }}</td>
-          <td>{{ expense.category.name }}</td>
-          <td>{{ expense.name }}</td>
-          <td>{{ expense.cost }} zł</td>
-          <td>{{ expense.description|truncatewords:"10" }}</td>
-        </tr>
-    {% endfor %}
-    </table>
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Dashboard <small>This month expenses</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-dashboard"></i> Dashboard
+                </li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info">
+                <strong>Current datetime:</strong> {% now "jS F Y H:i" %} ({% now "jS-m-Y" %})
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-shopping-cart fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ latest_expenses.info.total_cost }}</div>
+                            <div>zł</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">Money you spent</span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-comments fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ latest_expenses.info.transactions }}</div>
+                            <div>transactions</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">The number of transactions</span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-tasks fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">12</div>
+                            <div>transactions</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">Number of last month transactions</span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-support fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">13</div>
+                            <div>zł</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">You can spend this month</span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-9 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Daily expenses</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="morris-area-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Category expenses (zł)</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="morris-donut-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Detailed expenses</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Created at</th>
+                                    <th>Category</th>
+                                    <th>Expense name</th>
+                                    <th>Cost</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if latest_expenses.objects %}
+                                    {% for expense in latest_expenses.objects %}
+                                        <tr>
+                                        <td>{{ expense.created_at }}</td>
+                                        <td>{{ expense.category.name }}</td>
+                                        <td>{{ expense.name }}</td>
+                                        <td>{{ expense.cost }} zł</td>
+                                        <td>{{ expense.description|truncatewords:"10" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                        <tr>
+                                        <td colspan="5">No expenses, yet</td>
+                                        </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
 </div>
+<!-- /.container-fluid -->
 
 {% endblock %}
 
+
+{% block footer_js %}
+
+    <script src="{% static "js/plugins/morris/raphael.min.js" %}"></script>
+    <script src="{% static "js/plugins/morris/morris.min.js" %}"></script>
+
+    <script type="text/javascript">
+    
+$(function() {
+
+    // Area Chart
+    Morris.Area({
+        element: 'morris-area-chart',
+        data: [
+            {% for expense in latest_expenses.aggr_daily %}
+                {
+                    period: "{{ expense.date }}",
+                    cost: {{ expense.cost }},
+                    transactions: {{ expense.count }}
+                },
+            {% endfor %}
+        ],
+        xkey: 'period',
+        ykeys: ['cost', 'transactions'],
+        labels: ['Expenses', 'Transactions'],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true
+    });
+
+    // Donut Chart
+    Morris.Donut({
+        element: 'morris-donut-chart',
+        data: [
+            {% for aggr in latest_expenses.aggr %}
+            {
+                label: "{{ aggr.category__name }}",
+                value: {{ aggr.cost }}
+            }, 
+            {% endfor %}
+        ],
+        resize: true
+    });
+});
+    </script>
+
+{% endblock %}

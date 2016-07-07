@@ -1,54 +1,103 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 
-<div class="col-lg-12">
+<div class="container-fluid">
 
-    <h1>Create new expense</h1>
-    {% if form.errors %}
-        <ul style="color: red">
-        {% for error in form.errors %}
-            <li><strong>{{ error }}</strong></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
-    {% for error in form.non_field_errors %}
-        <div class="alert alert-error">
-            <strong>{{ error|escape }}</strong>
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                New expense <small>Create new expense</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-edit"></i> New Expense
+                </li>
+            </ol>
         </div>
-    {% endfor %}
+    </div>
+    <!-- /.row -->
 
-    <form action="" method="post"  class="">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_category">Category</label>
-            <select class="form-control" name="category">
-                <option value="">No category</option>
-                {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info">
+                <strong>Current datetime:</strong> {% now "jS F Y H:i" %} ({% now "jS-m-Y" %})
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <h1>Create new expense</h1>
+            {% if form.errors %}
+                <ul style="color: red">
+                {% for error in form.errors %}
+                    <li><strong>{{ error }}</strong></li>
                 {% endfor %}
-            </select>
-        </div>
+                </ul>
+            {% endif %}
 
-        <div class="form-group">
-            <label for="id_name">Expense name</label>
-            <input type="text" class="form-control" id="name" name="name">
-        </div>
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-error">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
 
-        <div class="form-group">
-            <label for="id_description">Expense description</label>
-            <textarea class="form-control" rows="6" name="description"></textarea>
-        </div>
+            <form action="" method="post"  class="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_category">Category</label>
+                    <select class="form-control" name="category">
+                        <option value="">No category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label for="id_cost">Cost (PLN)</label>
-            <input type="text" class="form-control" id="cost" name="cost">
-        </div>
+                <div class="form-group">
+                    <label for="id_name">Expense name</label>
+                    <input type="text" class="form-control" id="name" name="name">
+                </div>
 
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
+                <div class="form-group">
+                    <label for="id_description">Expense description</label>
+                    <textarea class="form-control" rows="6" name="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_cost">Cost (PLN)</label>
+                    <input type="text" class="form-control" id="cost" name="cost">
+                </div>
+
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+            <br>
+
+        </div>
+    </div>
 
 </div>
+<!-- /.container-fluid -->
 
+
+{% endblock %}
+
+
+
+{% block sidebar %}
+<ul class="nav navbar-nav side-nav">
+    <li>
+        <a href="{% url 'current' %}"><i class="fa fa-fw fa-dashboard"></i> Current Expenses</a>
+    </li>
+    <li>
+        <a href="{% url 'history' %}"><i class="fa fa-fw fa-table"></i> History</a>
+    </li>
+    <li class="active">
+        <a href="{% url 'expense_new' %}"><i class="fa fa-fw fa-edit"></i> Add new</a>
+    </li>
+</ul>
 {% endblock %}
