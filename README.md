@@ -2,9 +2,17 @@
 This is really simple application to help you track your expenses, monthy.
 
 ### Installation
-Simply git repo and 
+1) Clone repo
+
+2) Install requirements via PIP
+```
+pip install -r requirements.txt
+```
+
+3) Run application
 ```
 python manage.py migrate
+python manage.py collectstatic
 python manage.py runserver
 ```
 
