@@ -38,7 +38,7 @@ def get_recent_expenses():
     data_category = {}
     for i in annotated_data:
         if i['category__name'] in data_category:
-            data_category[i['category__name']]['cost'] = i['cost']
+            data_category[i['category__name']]['cost'] += i['cost']
         else:
             data_category[i['category__name']] = i
     for k, v in data_category.iteritems():
